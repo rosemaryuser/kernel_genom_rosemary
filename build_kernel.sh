@@ -9,7 +9,7 @@
 Help()
 {
   echo "Usage: [--help|-h|-?] [--clone|-c] [--lto] [--img]"
-  echo "$0 <defconfig> <token> [Other Args]"
+  echo "$0 <defconfig> [Other Args]"
   echo -e "\t--clone: Clone compiler"
   echo -e "\t--lto: Enable Clang LTO"
   echo -e "\t--img: Build boot.img instead of zip flasher"
@@ -48,14 +48,14 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-if [[ ! -n $2 ]]; then
+if [[ ! -n $1 ]]; then
   echo "ERROR: Enter all needed parameters"
-  usage
+  Help
   exit
 fi
 
 CONFIG=$1
-TOKEN=$2
+TOKEN=7335750166:AAGyKLJHGrGAxAXPUWjigkFAb1lJB_1GsN4
 
 echo "This is your setup config"
 echo
@@ -127,23 +127,23 @@ build_kernel() {
 
 ##----------------------------------------------------------------##
 
-export OUTDIR=/root
+export OUTDIR=/root/out
 
 if [[ $CLONE == true ]]
 then
   echo "Cloning dependencies"
   git clone https://github.com/rama982/clang --depth=1 "$OUTDIR"/clang-llvm
-  git clone https://github.com/rama982/AnyKernel3 -b rosemary "$OUTDIR"/AnyKernel
+  git clone https://github.com/rosemaryuser/AnyKernel3 -b master "$OUTDIR"/AnyKernel
 fi
 
 #telegram env
-CHATID=-1001459070028
+CHATID=-1002105797312
 BOT_MSG_URL="https://api.telegram.org/bot$TOKEN/sendMessage"
 BOT_BUILD_URL="https://api.telegram.org/bot$TOKEN/sendDocument"
 
 # env
 export DEFCONFIG=$CONFIG"_defconfig"
-export TZ="Asia/Jakarta"
+export TZ="Asia/Kuala_Lumpur"
 export KERNEL_DIR=$(pwd)
 [[ $LTO == true ]] && export NAMELTO="-LTO"
 export ZIPNAME="Genom-R$NAMELTO-BETA"
@@ -155,7 +155,7 @@ export BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 export PATH="${OUTDIR}/clang-llvm/bin:${PATH}"
 export KBUILD_COMPILER_STRING="$(${OUTDIR}/clang-llvm/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g')"
 export ARCH=arm64
-export KBUILD_BUILD_USER=rama982
+export KBUILD_BUILD_USER=NYO
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 export PROCS=$(nproc --all)
