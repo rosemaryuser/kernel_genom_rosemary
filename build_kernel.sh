@@ -164,7 +164,7 @@ export KERVER=$(make kernelversion)
 
 # start build
 tg_post_msg "
-Build is started
+Build started
 <b>OS: </b>$DISTRO
 <b>Date : </b>$(date)
 <b>Device : </b>$CONFIG
