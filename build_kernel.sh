@@ -6,6 +6,12 @@
 
 ##------------------------------------------------------##
 
+# setup color
+red='\033[0;31m'
+green='\e[0;32m'
+white='\033[0m'
+yellow='\033[0;33m'
+
 Help()
 {
   echo "Usage: [--help|-h|-?] [--clone|-c] [--lto] [--img]"
@@ -112,7 +118,11 @@ build_kernel() {
   [[ $LTO == true ]] && echo "CONFIG_LTO_CLANG=y" >> arch/arm64/configs/"$DEFCONFIG"
 #  [[ $LTO == true ]] && echo "CONFIG_THINLTO=n" >> arch/arm64/configs/"$DEFCONFIG"
   echo "-Genom-R$NAMELTO-$CONFIG" > localversion
+  make clean
   make O="$OUTDIR" ARCH=arm64 "$DEFCONFIG"
+  echo -e "\n"
+  echo -e "$yrllow << building kernel >> \n$white"
+  echo -e "\n"
   make -j"$PROCS" O="$OUTDIR" \
                   ARCH=arm64 \
                   CC=clang \
@@ -132,7 +142,7 @@ export OUTDIR=/root/out
 if [[ $CLONE == true ]]
 then
   echo "Cloning dependencies"
-  git clone https://github.com/rama982/clang --depth=1 "$OUTDIR"/clang-llvm
+  git clone https://github.com/rosemaryuser/clang-genom-kernel --depth=1 "$OUTDIR"/clang-llvm
   git clone https://github.com/rosemaryuser/AnyKernel3 -b master "$OUTDIR"/AnyKernel
 fi
 
